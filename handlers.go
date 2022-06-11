@@ -44,7 +44,16 @@ func newOrderHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func addOrderToRedis(cart Cart, address Address) (Order, error) {
-	order := getNewOrder(cart.ClientId, cart.CartItems, address)
+	shippingCost := getShippingCost()
+	cartItems := cart.CartItems
+	productIds := getProductIds(cartItems)
+	products, err := getProducts(productIds)
+	if err != nil {
+		panic(err.Error())
+	}
+	productsPrice := getProductsPrice(products, cartItems)
+	price := getTotalPrice(shippingCost, productsPrice)
+	order := getNewOrder(cart.ClientId, cart.CartItems, address, price)
 	json, err := json.Marshal(order)
 	if err != nil {
 		return Order{}, errors.New(err.Error())

@@ -9,7 +9,7 @@ import (
 func getRouter() *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/healthz", healthzHandler).Methods(http.MethodGet)
-	r.HandleFunc("/order/{userId}", getOrderHandler).Methods(http.MethodGet)
+	r.HandleFunc("/order/{orderId}", getOrderHandler).Methods(http.MethodGet)
 	r.HandleFunc("/order/{userId}", newOrderHandler).Methods(http.MethodPost)
 	return r
 }
